@@ -80,7 +80,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     new String[]{type+""},
                     null,
                     null,
-                    "score asc",
+                    "errors asc, score asc",
                     null);
            int a = 0;
             while (cursor.moveToNext()) {
