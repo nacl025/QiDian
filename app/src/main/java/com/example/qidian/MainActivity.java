@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void dealBtn3() {
         reset();
         equationType = 3;
-        initList(equationType);
+        initList(equationType, 100);
         setTextView();
         beginTime = new Date(System.currentTimeMillis());
 
@@ -216,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             cv.put("score", score);
             cv.put("type", equationType);
             cv.put("errors", errors);
+            cv.put("count", 100);
             //调用insert方法，将数据插入数据库
             db.insert("history_table", null, cv);
             //关闭数据库
@@ -231,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void dealBtn1() {
         reset();
         equationType = 1;
-        initList(equationType);
+        initList(equationType,100);
         setTextView();
         beginTime = new Date(System.currentTimeMillis());
     }
@@ -239,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void dealBtn2() {
         reset();
         equationType = 2;
-        initList(equationType);
+        initList(equationType, 100);
         setTextView();
         beginTime = new Date(System.currentTimeMillis());
     }
@@ -277,8 +278,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *             2：双数加减双数
      *             3: 乘法
      */
-    private void initList(int type) {
-        for (int i = 0; i < 60; i++) {
+    private void initList(int type, int count) {
+        for (int i = 0; i < 100; i++) {
             Equation e;
             while (true) {
                 e = getEquation(type);

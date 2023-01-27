@@ -23,14 +23,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="双数加减单数(60题)" />
+                android:text="双数加减单数(100题)" />
 
             <Button
                 android:id="@+id/btn2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="双数加减双数(60题)" />
+                android:text="双数加减双数(100题)" />
         </LinearLayout>
 
         <LinearLayout
@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="乘法(60题)" />
+                android:text="乘法(100题)" />
 
             <Button
                 android:id="@+id/btn_history"

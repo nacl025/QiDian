@@ -71,12 +71,12 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             // 参数2：要想显示的列
             //参数3：where子句
             //参数4：where子句对应的条件值
-            //参数5：分组方式
+            //参数5：分组方式asc
             //参数6：having条件
             //参数7：排序方式
            Cursor cursor = db.query("history_table",
                     new String[]{"datetime", "score", "errors"},
-                    "type=?",
+                    "type=? and count=100",
                     new String[]{type+""},
                     null,
                     null,
