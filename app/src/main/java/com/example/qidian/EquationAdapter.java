@@ -74,7 +74,12 @@ public class EquationAdapter extends ArrayAdapter<Equation> {
         TextView textView_b = view.findViewById(R.id.equation_b);
         textView_b.setText(_data.get(position).getB() + "");
         TextView textView_r = view.findViewById(R.id.equation_r);
-        textView_r.setText(_data.get(position).getTmpResult() + "");
+        if(_data.get(position).getSign()==3){
+            textView_r.setText(_data.get(position).getTmpChuFaResult().ChuShu + "......"+
+                    _data.get(position).getTmpChuFaResult().YuShu);
+        }else {
+            textView_r.setText(_data.get(position).getTmpResult() + "");
+        }
         if (!_data.get(position).getIsSuccess()) {
             view.findViewById(R.id.imageView_err).setVisibility(View.VISIBLE);
             view.findViewById(R.id.imageView_right).setVisibility(View.GONE);

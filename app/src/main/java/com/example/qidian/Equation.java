@@ -7,6 +7,7 @@ public class Equation {
     private int result;
     private boolean isSuccess;
     private int tmpResult;
+    private ChuFaResult tmpChuFaResult;
 
     public Equation(int _a, int _b, int _c) {
         a = _a;
@@ -24,7 +25,7 @@ public class Equation {
 
 
     /**
-     * @return 0+; 1-;2x
+     * @return 0+; 1-;2x;3/
      */
     public int getSign() {
         return sign;
@@ -45,8 +46,17 @@ public class Equation {
             case 2:
                 result = a * b;
                 break;
+            case 3:
+                break;
         }
         return result;
+    }
+
+    public ChuFaResult getChuResult(){
+            ChuFaResult chuFaResult = new ChuFaResult();
+            chuFaResult.ChuShu=a/b;
+            chuFaResult.YuShu =a%b;
+            return chuFaResult;
     }
 
     public void setIsSuccess(boolean success) {
@@ -63,5 +73,20 @@ public class Equation {
 
     public void setTmpResult(int tmpResult) {
         this.tmpResult = tmpResult;
+    }
+
+    public ChuFaResult getTmpChuFaResult() {
+        return tmpChuFaResult;
+    }
+
+    public void setTmpChuFaResult(int chushu, int yushu) {
+        this.tmpChuFaResult = new ChuFaResult();
+        tmpChuFaResult.YuShu = yushu;
+        tmpChuFaResult.ChuShu = chushu;
+    }
+
+    class ChuFaResult{
+        int ChuShu;
+        int YuShu;
     }
 }

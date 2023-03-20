@@ -1,14 +1,12 @@
 package com.example.qidian;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,30 +16,21 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  *
@@ -52,13 +41,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Equation> arrayList = new ArrayList<Equation>();
     private ArrayList<Equation> resultList = new ArrayList<Equation>();
     private TextView tv_a, tv_b, tv_c, tv_show;
-    private EditText et_result;
+    private EditText et_result, et_result2;
     private Button btn_next;
     private ListView listView;
+    private LinearLayout layout_yu;
     private int currtnIdex;
     EquationAdapter adapter;
     Date beginTime, endTime;
-    private int equationType = 1;//1双数加减单数;2双数加减双数;3乘法
+    private int equationType = 1;//1双数加减单数;2双数加减双数;3乘法;4除法
 
 
     @Override
@@ -70,9 +60,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_reset).setOnClickListener(this);
         findViewById(R.id.btn_next).setOnClickListener(this);
         findViewById(R.id.btn_history).setOnClickListener(this);
-        findViewById(R.id.btn2).setOnClickListener(this);
+        findViewById(R.id.btn_shuang).setOnClickListener(this);
         findViewById(R.id.btn_screenshot).setOnClickListener(this);
-        findViewById(R.id.btn3).setOnClickListener(this);
+        findViewById(R.id.btn_cheng).setOnClickListener(this);
+        findViewById(R.id.btn_div).setOnClickListener(this);
+        findViewById(R.id.btn_excel).setOnClickListener(this);
         verifyStoragePermissions(this);
 
     }
@@ -85,6 +77,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         et_result = findViewById(R.id.et_result);
         btn_next = findViewById(R.id.btn_next);
         listView = findViewById(R.id.lv_note);
+        layout_yu = findViewById(R.id.layout_yu);
+        et_result2 = findViewById(R.id.et_result2);
+
         //adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, errorList);
     }
 
@@ -100,8 +95,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_next:
                 dealNext();
                 break;
-            case R.id.btn2:
-                dealBtn2();
+            case R.id.btn_shuang:
+                dealBtnShuang();
                 break;
             case R.id.btn_history:
                 Intent it = new Intent(MainActivity.this, HistoryActivity.class);
@@ -111,14 +106,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_screenshot:
                 takeScreenshot();
                 break;
-            case R.id.btn3:
-                dealBtn3();
+            case R.id.btn_cheng:
+                dealBtnCheng();
+                break;
+            case R.id.btn_div:
+                dealBtnChu();
+                break;
+            case R.id.btn_excel:
+                export();
                 break;
 
         }
     }
 
-    private void dealBtn3() {
+    private void dealBtnChu(){
+        reset();
+        equationType=4;
+        initList(equationType,100);
+        setTextView();
+        beginTime = new Date(System.currentTimeMillis());
+
+    }
+
+    private void dealBtnCheng() {
         reset();
         equationType = 3;
         initList(equationType, 100);
@@ -126,6 +136,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         beginTime = new Date(System.currentTimeMillis());
 
     }
+
+    /**
+     *
+     */
+    private void dealBtn1() {
+        reset();
+        equationType = 1;
+        initList(equationType,100);
+        setTextView();
+        beginTime = new Date(System.currentTimeMillis());
+    }
+
+    private void dealBtnShuang() {
+        reset();
+        equationType = 2;
+        initList(equationType, 100);
+        setTextView();
+        beginTime = new Date(System.currentTimeMillis());
+    }
+
 
     private void reset() {
         arrayList.clear();
@@ -158,6 +188,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             printResult();
             btn_next.setEnabled(false);
         }
+
+        et_result.requestFocus();
+        et_result.requestFocusFromTouch();
     }
 
     private void printResult() {
@@ -184,14 +217,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void saveResult() {
-        int r = Integer.parseInt(et_result.getText().toString());
-        if (r != arrayList.get(currtnIdex).getResult()) {
-            arrayList.get(currtnIdex).setIsSuccess(false);
-        } else {
-            arrayList.get(currtnIdex).setIsSuccess(true);
+        if(equationType == 4){
+            int r1 = Integer.parseInt(et_result.getText().toString());
+            int r2 = et_result2.getText().toString().isEmpty()? 0 : Integer.parseInt(et_result2.getText().toString());
+            if(r1 == arrayList.get(currtnIdex).getChuResult().ChuShu && r2 == arrayList.get(currtnIdex).getChuResult().YuShu){
+                arrayList.get(currtnIdex).setIsSuccess(true);
+            }else{
+                arrayList.get(currtnIdex).setIsSuccess(false);
+            }
+            arrayList.get(currtnIdex).setTmpChuFaResult(r1, r2);
+            resultList.add(arrayList.get(currtnIdex));
+        }else {
+            int r = Integer.parseInt(et_result.getText().toString());
+            if (r != arrayList.get(currtnIdex).getResult()) {
+                arrayList.get(currtnIdex).setIsSuccess(false);
+            } else {
+                arrayList.get(currtnIdex).setIsSuccess(true);
+            }
+            arrayList.get(currtnIdex).setTmpResult(r);
+            resultList.add(arrayList.get(currtnIdex));
         }
-        arrayList.get(currtnIdex).setTmpResult(r);
-        resultList.add(arrayList.get(currtnIdex));
     }
 
     /**
@@ -226,41 +271,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /**
-     *
-     */
-    private void dealBtn1() {
-        reset();
-        equationType = 1;
-        initList(equationType,100);
-        setTextView();
-        beginTime = new Date(System.currentTimeMillis());
-    }
-
-    private void dealBtn2() {
-        reset();
-        equationType = 2;
-        initList(equationType, 100);
-        setTextView();
-        beginTime = new Date(System.currentTimeMillis());
-    }
 
     private void setTextView() {
         tv_a.setText(String.valueOf(arrayList.get(currtnIdex).getA()));
         tv_b.setText(String.valueOf(arrayList.get(currtnIdex).getB()));
         et_result.setText("");
+        et_result2.setText("");
         switch (arrayList.get(currtnIdex).getSign()) {
             case 0:
                 tv_c.setText("+");
+                layout_yu.setVisibility(View.GONE);
                 break;
             case 1:
                 tv_c.setText("-");
+                layout_yu.setVisibility(View.GONE);
                 break;
             case 2:
                 tv_c.setText("×");
+                layout_yu.setVisibility(View.GONE);
                 break;
             case 3:
                 tv_c.setText("÷");
+                layout_yu.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -270,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_b.setText("");
         tv_c.setText("");
         et_result.setText("");
+        et_result2.setText("");
         btn_next.setText("下一个");
     }
 
@@ -283,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Equation e;
             while (true) {
                 e = getEquation(type);
-                if (type == 1) {
+                if (type == 1) {//判断是否进位加减
                     if (e.getSign() == 1) {
                         if (e.getA() % 10 < e.getB()) {
                             break;
@@ -293,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         }
                     }
-                } else if (type == 2) {
+                } else if (type == 2) {//判断是否进位加减
                     if (e.getSign() == 1) {
                         if (e.getA() % 10 < e.getB() % 10) {
                             break;
@@ -303,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         }
                     }
-                } else if (type == 3) {
+                } else {
                     break;
                 }
             }
@@ -330,15 +363,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             a = getRandomNum1();
             b = getRandomNum3();
             c = (int) (Math.random() * 20) % 2;
-        } else {
+        } else if(type == 3){
             a = getRandomNum4();
             b = getRandomNum4();
             c = 2;
+        } else {
+            a = getRandomNum5();
+            b = getRandomNum4();
+            c = 3;
         }
         Equation equation = new Equation(a, b, c);
-        if (equation.getResult() >= 100 || equation.getResult() <= 0) {
-            return getEquation(type);
-        } else {
+        if(type == 1 || type ==2) {
+            if (equation.getResult() >= 100 || equation.getResult() <= 0) {
+                return getEquation(type);
+            } else {
+                return equation;
+            }
+        }else{
             return equation;
         }
     }
@@ -408,29 +449,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return b;
     }
 
-
-    ArrayList<String> permissionList = new ArrayList<>();
-    private String[] permissions = {
-            "android.permission.READ_EXTERNAL_STORAGE",
-            "android.permission.WRITE_EXTERNAL_STORAGE"};
-
     /**
-     * 申请系统权限
+     * 生成10<n<90的数
+     *
+     * @return
      */
-    private void requestPermission() {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-            if (checkSelfPermission(permissions[0]) != PackageManager.PERMISSION_GRANTED) {
-                permissionList.add(permissions[0]);
-            }
-            if (checkSelfPermission(permissions[1]) != PackageManager.PERMISSION_GRANTED) {
-                permissionList.add(permissions[1]);
-            }
-
-            if (!permissionList.isEmpty()) {
-                String[] permissions1 = permissionList.toArray(new String[permissionList.size()]);
-                requestPermissions(permissions1, 1);
+    private int getRandomNum5(){
+        int a;
+        while (true) {
+            a = (int) (Math.random() * 100);
+            if (a > 10 && a < 90) {
+                break;
             }
         }
+        return a;
     }
 
     // Storage Permissions
@@ -458,7 +490,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     REQUEST_EXTERNAL_STORAGE);
         }
     }
-
 
     private void takeScreenshot() {
         new MyAsyncTask().execute();
@@ -519,4 +550,184 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
+    private String excelFilePath = "";
+    private String[] colNames = new String[]{"姓名","日期","时间"};
+    //"电话号码","日期", "时间", "体温", "特殊情况", "地理位置"
+    String[] pess = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
+    /**
+     * 导出表格的操作
+     * "新的运行时权限机制"只在应用程序的targetSdkVersion>=23时生效，并且只在6.0系统之上有这种机制，在低于6.0的系统上应用程序和以前一样不受影响。
+     * 当前应用程序的targetSdkVersion小于23（为22），系统会默认其尚未适配新的运行时权限机制，安装后将和以前一样不受影响：即用户在安装应用程序的时候默认允许所有被申明的权限
+     */
+    private void export() {
+        if (this.getApplicationInfo().targetSdkVersion >= 23 && Build.VERSION.SDK_INT >= 23) {
+            requestPermission();
+        } else {
+            writeExcel();
+        }
+    }
+
+
+    /**
+     * 动态请求读写权限
+     */
+    private void requestPermission() {
+        if (!checkPermission()) {//如果没有权限则请求权限再写
+            ActivityCompat.requestPermissions(this, pess, 100);
+        } else {//如果有权限则直接写
+            writeExcel();
+        }
+    }
+
+
+    /**
+     * 检测权限
+     *
+     * @return
+     */
+    private boolean checkPermission() {
+        for (String permission : pess) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                // 只要有一个权限没有被授予, 则直接返回 false
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 将数据写入excel表格
+     */
+    private void writeExcel() {
+        if (getExternalStoragePath() == null) return;
+        File file = new File(getExternalStoragePath() + "/Joey");
+        makeDir(file);
+        DateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd");
+        String fileName = dateFormat.format(System.currentTimeMillis()) + ".xls";
+        excelFilePath = getExternalStoragePath() + "/Joey/" + fileName;
+        if (checkFile(excelFilePath)) {
+            deleteByPath(excelFilePath);//如果文件存在则先删除原有的文件
+        }
+        ExcelUtils.initExcel(excelFilePath, "First", "Second", colNames);//需要写入权限
+        ExcelUtils.writeObjListToExcel(getEquationData(), getResultData(), excelFilePath, this);
+      }
+
+    /**
+     * 根据路径生成文件夹
+     *
+     * @param filePath
+     */
+    public static void makeDir(File filePath) {
+        if (!filePath.getParentFile().exists()) {
+            makeDir(filePath.getParentFile());
+        }
+        filePath.mkdir();
+    }
+
+    /**
+     * 获取外部存储路径
+     *
+     * @return
+     */
+    public String getExternalStoragePath() {
+        File sdDir = null;
+        boolean sdCardExist = Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+        if (sdCardExist) {
+            sdDir = Environment.getExternalStorageDirectory();
+            return sdDir.toString();
+        } else {
+            Toast.makeText(this, "找不到外部存储路径，读写手机存储权限被禁止，请在权限管理中心手动打开权限", Toast.LENGTH_LONG).show();
+            return null;
+        }
+    }
+
+    /**
+     *
+     *
+     * @return
+     */
+    public ArrayList<ArrayList<String>> getEquationData() {
+        ArrayList<ArrayList<String>> datas = new ArrayList<>();
+        ArrayList<String> data = null;
+        for (int i = 0; i < 33; i++) {
+            data = new ArrayList<>();
+            data.clear();
+            for (int j = 0; j < 3; j++) {
+                Equation e = arrayList.get(i * 3 + j);
+                String a = "";
+                switch (e.getSign()) {
+                    case 0:
+                        a = "+";
+                        break;
+                    case 1:
+                        a = "-";
+                        break;
+                    case 2:
+                        a = "×";
+                        break;
+                    case 3:
+                        a = "÷";
+                        break;
+                }
+                String s = e.getA() + a + e.getB() + "=";
+                data.add(s);
+            }
+            datas.add(data);
+        }
+        return datas;
+    }
+
+    public ArrayList<ArrayList<String>> getResultData(){
+        ArrayList<ArrayList<String>> datas = new ArrayList<>();
+        ArrayList<String> data = null;
+        for (int i = 0; i < 33; i++) {
+            data = new ArrayList<>();
+            data.clear();
+            for (int j = 0; j < 3; j++) {
+                Equation e = arrayList.get(i * 3 + j);
+                String s ="";
+                if(e.getSign() ==3 ){
+                    s = e.getChuResult().ChuShu +"......" + e.getChuResult().YuShu;
+                }else{
+                    s = e.getResult() + "";
+                }
+                data.add(s);
+            }
+            datas.add(data);
+        }
+        return datas;
+    }
+
+    /**
+     * 根据文件路径检测文件是否存在,需要读取权限
+     *
+     * @param filePath 文件路径
+     * @return true存在
+     */
+    private boolean checkFile(String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            if (file.isFile()) return true;
+            else return false;
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
+     * 根据文件路径删除文件
+     *
+     * @param filePath
+     */
+    private void deleteByPath(String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            if (file.isFile())
+                file.delete();
+        }
+    }
 }
