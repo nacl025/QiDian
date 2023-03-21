@@ -336,7 +336,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             break;
                         }
                     }
-                } else {
+                } else if(type == 4) {
+                    if(e.getChuResult().ChuShu < 9){
+                        break;
+                    }
+                } else{
                     break;
                 }
             }
@@ -605,7 +609,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         File file = new File(getExternalStoragePath() + "/Joey");
         makeDir(file);
         DateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd");
+                "yyyy-MM-dd-HH-mm-ss");
         String fileName = dateFormat.format(System.currentTimeMillis()) + ".xls";
         excelFilePath = getExternalStoragePath() + "/Joey/" + fileName;
         if (checkFile(excelFilePath)) {
