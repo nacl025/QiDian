@@ -42,7 +42,7 @@ public class ExcelUtils {
 
     public static void format() {
         try {
-            arial12font = new WritableFont(WritableFont.ARIAL, 16);
+            arial12font = new WritableFont(WritableFont.ARIAL, 19);
             arial12format = new WritableCellFormat(arial12font);
             arial12format.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
         } catch (WriteException e) {
@@ -106,14 +106,14 @@ public class ExcelUtils {
             }
             workbook = Workbook.createWorkbook(file);
             WritableSheet sheet = workbook.createSheet(sheetName, 0);
-            sheet.getSettings().setDefaultColumnWidth(25);
+            sheet.getSettings().setDefaultColumnWidth(40);
             sheet.addCell((WritableCell) new Label(0, 0, filePath, arial12format));
             for (int col = 0; col < colName.length; col++) {
                 sheet.addCell(new Label(col, 0, colName[col], arial12format));
             }
             //*****************************************************************
             WritableSheet sheet2 = workbook.createSheet(sheet2Name, 1);
-            sheet2.getSettings().setDefaultColumnWidth(25);
+            sheet2.getSettings().setDefaultColumnWidth(40);
             sheet2.addCell((WritableCell) new Label(0, 0, filePath, arial12format));
             for (int col = 0; col < colName.length; col++) {
                 sheet2.addCell(new Label(col, 0, colName[col], arial12format));

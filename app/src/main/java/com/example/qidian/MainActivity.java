@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *             3: 乘法
      */
     private void initList(int type, int count) {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 60; i++) {
             Equation e;
             while (true) {
                 e = getEquation(type);
@@ -556,7 +556,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private String excelFilePath = "";
-    private String[] colNames = new String[]{"姓名","日期","时间"};
+    private String[] colNames = new String[]{"姓名","时间"};
     //"电话号码","日期", "时间", "体温", "特殊情况", "地理位置"
     String[] pess = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -656,11 +656,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public ArrayList<ArrayList<String>> getEquationData() {
         ArrayList<ArrayList<String>> datas = new ArrayList<>();
         ArrayList<String> data = null;
-        for (int i = 0; i < 33; i++) {
+        for (int i = 0; i < 30; i++) {
             data = new ArrayList<>();
             data.clear();
-            for (int j = 0; j < 3; j++) {
-                Equation e = arrayList.get(i * 3 + j);
+            for (int j = 0; j < 2; j++) {
+                Equation e = arrayList.get(i * 2 + j);
                 String a = "";
                 switch (e.getSign()) {
                     case 0:
@@ -687,11 +687,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public ArrayList<ArrayList<String>> getResultData(){
         ArrayList<ArrayList<String>> datas = new ArrayList<>();
         ArrayList<String> data = null;
-        for (int i = 0; i < 33; i++) {
+        for (int i = 0; i < 30; i++) {
             data = new ArrayList<>();
             data.clear();
-            for (int j = 0; j < 3; j++) {
-                Equation e = arrayList.get(i * 3 + j);
+            for (int j = 0; j < 2; j++) {
+                Equation e = arrayList.get(i * 2 + j);
                 String s ="";
                 if(e.getSign() ==3 ){
                     s = e.getChuResult().ChuShu +"......" + e.getChuResult().YuShu;
