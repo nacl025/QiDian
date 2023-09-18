@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int currtnIdex;
     EquationAdapter adapter;
     Date beginTime, endTime;
-    private int equationType = 1;//1双数加减单数;2双数加减双数;3乘法;4除法
+    private int equationType = 1;//1双数加减单数;2双数加减双数;3乘法;4除法;5整十乘个数
 
 
     @Override
@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_cheng).setOnClickListener(this);
         findViewById(R.id.btn_div).setOnClickListener(this);
         findViewById(R.id.btn_excel).setOnClickListener(this);
+        findViewById(R.id.btn_cheng2).setOnClickListener(this);
         verifyStoragePermissions(this);
 
     }
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listView = findViewById(R.id.lv_note);
         layout_yu = findViewById(R.id.layout_yu);
         et_result2 = findViewById(R.id.et_result2);
+
 
         //adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, errorList);
     }
@@ -115,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_excel:
                 export();
                 break;
+            case R.id.btn_cheng2:
+                dealBtnCheng2();
+                break;
 
         }
     }
@@ -131,6 +136,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void dealBtnCheng() {
         reset();
         equationType = 3;
+        initList(equationType, 100);
+        setTextView();
+        beginTime = new Date(System.currentTimeMillis());
+
+    }
+
+    private void dealBtnCheng2() {
+        reset();
+        equationType = 5;
         initList(equationType, 100);
         setTextView();
         beginTime = new Date(System.currentTimeMillis());
@@ -367,8 +381,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             a = getRandomNum1();
             b = getRandomNum3();
             c = (int) (Math.random() * 20) % 2;
-        } else if(type == 3){
+        } else if(type == 3) {
             a = getRandomNum4();
+            b = getRandomNum4();
+            c = 2;
+        } else if (type ==5){
+            a = getRandomNum4();
+            if(a%3==1){
+                a =a*100;
+            }else{
+                a =a *10;
+            }
             b = getRandomNum4();
             c = 2;
         } else {
