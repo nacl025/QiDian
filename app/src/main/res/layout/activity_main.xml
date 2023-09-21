@@ -65,6 +65,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="整十乘个数" />
+
+            <Button
+                android:id="@+id/btn_cheng3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="双数乘个数" />
+
         </LinearLayout>
 
         <LinearLayout

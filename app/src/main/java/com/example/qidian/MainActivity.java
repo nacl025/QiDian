@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int currtnIdex;
     EquationAdapter adapter;
     Date beginTime, endTime;
-    private int equationType = 1;//1双数加减单数;2双数加减双数;3乘法;4除法;5整十乘个数
+    private int equationType = 1;//1双数加减单数;2双数加减双数;3乘法;4除法;5整十乘个数;6双数乘个数
 
 
     @Override
@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_div).setOnClickListener(this);
         findViewById(R.id.btn_excel).setOnClickListener(this);
         findViewById(R.id.btn_cheng2).setOnClickListener(this);
+        findViewById(R.id.btn_cheng3).setOnClickListener(this);
         verifyStoragePermissions(this);
 
     }
@@ -120,6 +121,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_cheng2:
                 dealBtnCheng2();
                 break;
+            case R.id.btn_cheng3:
+                dealBtnCheng3();
+                break;
 
         }
     }
@@ -149,6 +153,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTextView();
         beginTime = new Date(System.currentTimeMillis());
 
+    }
+
+    private void dealBtnCheng3(){
+        reset();
+        equationType = 6;
+        initList(equationType, 100);
+        setTextView();
+        beginTime = new Date(System.currentTimeMillis());
     }
 
     /**
@@ -394,6 +406,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             b = getRandomNum4();
             c = 2;
+        } else if(type == 6) {
+           a=getRandomNum1();
+           b= getRandomNum4();
+           c=2;
         } else {
             a = getRandomNum5();
             b = getRandomNum4();
