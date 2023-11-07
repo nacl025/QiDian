@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_excel).setOnClickListener(this);
         findViewById(R.id.btn_cheng2).setOnClickListener(this);
         findViewById(R.id.btn_cheng3).setOnClickListener(this);
+        findViewById(R.id.btn6).setOnClickListener(this);
         verifyStoragePermissions(this);
 
     }
@@ -124,8 +125,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_cheng3:
                 dealBtnCheng3();
                 break;
+            case R.id.btn6:
+                dealHunhe();
+                break;
+
 
         }
+    }
+
+    private void dealHunhe(){
+        reset();
+        initList2();
+        setTextView();
+        beginTime = new Date(System.currentTimeMillis());
     }
 
     private void dealBtnChu(){
@@ -332,6 +344,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_next.setText("下一个");
     }
 
+    private void initList2(){
+        for (int i = 0; i < 30; i++) {
+            Equation e = getEquation(6);//双数乘以个数;
+            arrayList.add(e);
+        }
+        for(int i =0 ;i<30;i++){
+            Equation  equation = getEquation6();
+            arrayList.add(equation);
+        }
+    }
+
     /**
      * @param type 1: 双数加减单数
      *             2：双数加减双数
@@ -371,6 +394,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             arrayList.add(e);
+        }
+    }
+
+    // 生成商是双位数除法
+    private Equation getEquation6() {
+        int a = getRandomNum6();
+        int b = getRandomNum4();
+        int c = 3;
+        Equation equation = new Equation(a, b, c);
+        if (equation.getChuResult().ChuShu >9 ) {
+            return equation;
+        } else {
+            return getEquation6();
         }
     }
 
@@ -502,6 +538,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         while (true) {
             a = (int) (Math.random() * 100);
             if (a > 10 && a < 90) {
+                break;
+            }
+        }
+        return a;
+    }
+
+    /**
+     * 生成10<n<100的数
+     *
+     * @return
+     */
+    private int getRandomNum6(){
+        int a;
+        while (true) {
+            a = (int) (Math.random() * 100);
+            if (a > 10 && a < 100) {
                 break;
             }
         }

@@ -218,7 +218,7 @@ public class ExcelUtils {
                     }
                 }
                 writebook.write();
-                Toast.makeText(c, " 导出成功 ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(c, " 导出成功: "+filePath, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
